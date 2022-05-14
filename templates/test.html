@@ -1,0 +1,49 @@
+<html>
+    <body>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <div id="chart_div"></div>
+        <br/>
+        <button onclick="fun()">cli</button>
+        <script>
+            google.charts.load('current', {packages: ['corechart', 'line']});
+            google.charts.setOnLoadCallback(drawBasic);
+            var chart;
+            var rows=[];
+            var cNow=Date.now();
+            for(let i=0;i<60;i++) {
+                rows[i]=[new Date(cNow  - (59-i) * 1000 * 60 ),4];
+            }
+            function drawBasic() {
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('date', 'X');
+                data.addColumn('number', 'Sandip');
+
+                data.addRows(rows);
+
+                var options = {
+                    hAxis: {
+                    title: 'Time'
+                    },
+                    vAxis: {
+                    title: 'Popularity'
+                    },
+                    crosshair: {
+                        color: '#000',
+                        trigger: 'selection'
+                      }
+                };
+
+                chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+                chart.draw(data, options);
+                chart.setSelection([{row: 2, column: 1}]);
+            }
+            function fun() {
+                alert(JSON.stringify(chart.getSelection()));
+                rows[5][1]++;
+            }  
+            var t=setInterval(()=>rows[59][1]++,6000);
+        </script>
+    </body>
+</html>

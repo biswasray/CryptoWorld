@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2 class="mx-3"><img id="coinicon" src="" alt="Loading..."/>&nbsp;<label id="coinname"></label></h2>
+    <p id="pr"></p>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <div id="chart_div"></div>
+    <div id="details" class="col mx-5">
+        <h3>Coin Information</h3>
+        <p id="amount">Price :</p><hr/>
+        <p id="mah">Maximum in 1 Hour :</p><hr/>
+        <p id="mih">Minuimum in 1 Hour :</p><hr/>
+        <p id="mah">Maximum in 1 Hour :</p><hr/>
+        <p id="mih">Minuimum in 1 Hour :</p><hr/>
+        
+        <p id="v1h">Volume 1 Hour :</p><hr/>
+        <p id="v1d">Volume 1 Day :</p><hr/>
+        <p id="v1m">Volume 1 Month :</p><hr/>        
+    </div>
+    <script>
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        google.charts.setOnLoadCallback(drawBasic);
+        var chart;
+        var data;
+        var options;
+        var rows=[];
+        var cNow=Date.now();
+        for(let i=0;i<60;i++) {
+            rows[i]=[new Date(cNow  - (59-i) * 1000 * 60 ),4];
+        }
+        function drawBasic() {
+            data = new google.visualization.DataTable();
+            data.addColumn('date', 'X');
+            data.addColumn('number', 'INR');
+
+            data.addRows(rows);
+
+            options = {
+                hAxis: {
+                title: 'Time'
+                },
+                vAxis: {
+                title: 'INR'
+                },
+                crosshair: {
+                    color: '#000',
+                    trigger: 'selection'
+                    }
+            };
+
+            chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+            chart.setSelection([{row: 2, column: 1}]);
+        }
+        function fun(data) {
+            ir=document.getElementById("coinicon");
+            let nm=data.name.toLowerCase().replace(" ","-");
+            ir.src="https://raw.githubusercontent.com/subhasish9583672357/cryptocurrency-icons/master/32x32/"+nm+".png";
+            hr=document.getElementById("coinname");
+            hr.innerHTML=data.name;
+            console.log(data);
+            document.getElementById("amount").innerHTML+=(parseFloat(data.amount)).toFixed(2);
+            document.getElementById("v1h").innerHTML+=data.volume_1hrs_usd;
+            document.getElementById("v1d").innerHTML+=data.volume_1day_usd;
+            document.getElementById("v1m").innerHTML+=data.volume_1mth_usd;
+        }
+        function fill(data) {
+            console.log(data);
+            cNow=Date.now();
+            for(let i=0;i<60;i++) {
+                rows[i]=[new Date(cNow  - (59-i) * 1000 * 60 ),data[i]];
+            }
+            //drawBasic();
+            //data.addRows(rows);
+            //chart.draw(data, options);
+            google.charts.setOnLoadCallback(drawBasic);
+        }
+        function run() {
+            fetch('/currentminutes/'+coin.toUpperCase())
+            .then(res=>res.json())
+            .then(data=>fill(data));
+        }
+        var coin='{{coin_name}}';
+        console.log(coin);
+        fetch('/currentdata/'+coin.toUpperCase())
+        .then(res=>res.json())
+        .then(data=>fun(data));
+        run();
+        var t=setInterval(()=>run(),60000);
+    </script>
+{% endblock content %}
