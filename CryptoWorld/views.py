@@ -15,6 +15,7 @@ def currentdata(req,cid) :
     return HttpResponse(consume.pipelineBasic(cid))
 def currentMinute(req,cid) :
     return HttpResponse(consume.pipelineMinute(cid))
-    
+def getCoin(req,cid,date) :
+    return HttpResponse(consume.getCoin(cid,date))
 def currentDays(req,cid) :
     return HttpResponse(consume.pipelineDays(cid))

@@ -22,6 +22,6 @@ def getBTC(date=None) :
     if date==None :
         return client.get_spot_price(currency_pair='BTC-INR')
     return client.get_spot_price(currency_pair='BTC-INR',date=date)
-# print(client.get_exchange_rates(currency='USD').rates.INR)
-for i in range(0, 7):
-    print(getBTC(datetime.datetime.now() - datetime.timedelta(i)).amount)
+print(getBTC('05-20-2022 19:59:26'))
+# for i in range(0, 7):
+#     print(getBTC(datetime.datetime.now() - datetime.timedelta(i)).amount)
