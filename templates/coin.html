@@ -8,13 +8,35 @@
             <strong>Day High</strong>: {{ value.INR.HIGHDAY }}<br/>
             <strong>Day Low</strong>: {{ value.INR.LOWDAY }}<br/>
             <strong>Market Cap</strong>: {{ value.INR.MKTCAP }}<br/>
+            <p style="text-align:center; font-size: large;"><strong>Probability of Increment</strong>: <strong class="pro" style="color:blue">0.0 %</strong></p><br/>
         </div>  
       <br/><br/>
     {% endfor %}
     {% comment %} <h2 class="mx-3"><img id="coinicon" src="" alt="Loading..."/>&nbsp;<label id="coinname"></label></h2>
     <p id="pr"></p> {% endcomment %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <div id="chart_div"></div>
+    <div id="chart_div" style="width:100%;" class="charts"></div>
+    <div id="chart_day" style="width:100%;" class="charts"></div>
+    <div id="chart_week" style="width:100%;" class="charts"></div>
+    <div id="chart_month" style="width:100%;" class="charts"></div>
+    <div id="chart_year" style="width:100%;" class="charts"></div>
+    <ul class="nav nav-tabs justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link ua" onclick="switchVisible(0)">1h</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link ua" onclick="switchVisible(1)">1D</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link ua" onclick="switchVisible(2)">1W</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link ua" onclick="switchVisible(3)">1M</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link ua" onclick="switchVisible(4)">1Y</a>
+        </li>
+      </ul>
     {% comment %} <div id="details" class="col mx-5">
         <h3>Coin Information</h3>
         <p id="amount">Price :</p><hr/>
@@ -30,13 +52,29 @@
     <script>
         google.charts.load('current', {packages: ['corechart', 'line']});
         google.charts.setOnLoadCallback(drawBasic);
-        var chart;
-        var data;
-        var options;
+        var chart,chart1,chart2,chart3,chart4;
+        var data,data1,data2,data3,data4;
+        var options,options1,options2,options3,options4;
         var rows=[];
+        var rows1=[];
+        var rows2=[];
+        var rows3=[];
+        var rows4=[];
         var cNow=Date.now();
         for(let i=0;i<=60;i++) {
             rows[i]=[new Date(cNow  - (60-i) * 1000 * 60 ),4];
+        }
+        for(let i=0;i<=24;i++) {
+            rows1[i]=[new Date(cNow  - (60-i) * 1000 * 60 ),4];
+        }
+        for(let i=0;i<7;i++) {
+            rows2[i]=[new Date(cNow  - (60-i) * 1000 * 60 ),4];
+        }
+        for(let i=0;i<30;i++) {
+            rows3[i]=[new Date(cNow  - (60-i) * 1000 * 60 ),4];
+        }
+        for(let i=0;i<365;i++) {
+            rows4[i]=[new Date(cNow  - (60-i) * 1000 * 60 ),4];
         }
         function drawBasic() {
             data = new google.visualization.DataTable();
@@ -62,6 +100,104 @@
 
             chart.draw(data, options);
             chart.setSelection([{row: 2, column: 1}]);
+
+            data1 = new google.visualization.DataTable();
+            data1.addColumn('date', 'X');
+            data1.addColumn('number', 'INR');
+
+            data1.addRows(rows1);
+
+            options1 = {
+                hAxis: {
+                title: 'Time'
+                },
+                vAxis: {
+                title: 'INR'
+                },
+                crosshair: {
+                    color: '#000',
+                    trigger: 'selection'
+                    }
+            };
+
+            chart1 = new google.visualization.LineChart(document.getElementById('chart_day'));
+
+            chart1.draw(data1, options1);
+            chart1.setSelection([{row: 2, column: 1}]);
+
+            data2 = new google.visualization.DataTable();
+            data2.addColumn('date', 'X');
+            data2.addColumn('number', 'INR');
+
+            data2.addRows(rows2);
+
+            options2 = {
+                hAxis: {
+                title: 'Time'
+                },
+                vAxis: {
+                title: 'INR'
+                },
+                crosshair: {
+                    color: '#000',
+                    trigger: 'selection'
+                    }
+            };
+
+            chart2 = new google.visualization.LineChart(document.getElementById('chart_week'));
+
+            chart2.draw(data2, options2);
+            chart2.setSelection([{row: 2, column: 1}]);
+
+            data3 = new google.visualization.DataTable();
+            data3.addColumn('date', 'X');
+            data3.addColumn('number', 'INR');
+
+            data3.addRows(rows3);
+
+            options3 = {
+                hAxis: {
+                title: 'Time'
+                },
+                vAxis: {
+                title: 'INR'
+                },
+                crosshair: {
+                    color: '#000',
+                    trigger: 'selection'
+                    }
+            };
+
+            chart3 = new google.visualization.LineChart(document.getElementById('chart_month'));
+
+            chart3.draw(data3, options3);
+            chart3.setSelection([{row: 2, column: 1}]);
+
+            data4 = new google.visualization.DataTable();
+            data4.addColumn('date', 'X');
+            data4.addColumn('number', 'INR');
+
+            data4.addRows(rows4);
+
+            options4 = {
+                hAxis: {
+                title: 'Time'
+                },
+                vAxis: {
+                title: 'INR'
+                },
+                crosshair: {
+                    color: '#000',
+                    trigger: 'selection'
+                    }
+            };
+
+            chart4 = new google.visualization.LineChart(document.getElementById('chart_year'));
+
+            chart4.draw(data4, options4);
+            chart4.setSelection([{row: 2, column: 1}]);
+
+
         }
         function fun(data) {
             let pe=data[data.length-1];
@@ -72,37 +208,81 @@
                 el.style.color = "green";
             el.innerHTML=(parseFloat(pe)).toFixed(2)+"%";
         }
-        function fill(data) {
-            console.log(data);
+        function fill(rw,data) {
+            //console.log(data);
             //cNow=Date.now();
             //let ti=data.length-5;
             for(let i=0;i<data.length;i++) {
                 let dt=new Date(data[i]?.time*1000);
                 //console.log(data[i]?.);
-                rows[i]=[dt,data[i]?.open];
+                rw[i]=[dt,data[i]?.open];
             }
             //drawBasic();
             //data.addRows(rows);
             //chart.draw(data, options);
             google.charts.setOnLoadCallback(drawBasic);
         }
-        function run() {
+        function fill1(rw,data,n) {
+            let j=0;
+            for(let i=data.length-n;i<data.length;i++) {
+                let dt=new Date(data[i]?.time*1000);
+                //console.log(data[i]?.);
+                rw[j++]=[dt,data[i]?.open];
+            }
+            google.charts.setOnLoadCallback(drawBasic);
+        }
+        function run(y) {
             var coin='{{coin_name}}';
-            fetch('/minutehistory/'+coin.toUpperCase())
-            .then(res=>res.json())
-            //.then(data=>console.log(data));
-            .then(data=>fill(data?.Data?.Data));
+            if(y==0) {
+                fetch('/minutehistory/'+coin.toUpperCase())
+                .then(res=>res.json())
+                .then(data=>fill(rows,data?.Data?.Data));
+            }
+            else if(y==1) {
+                fetch('/hourlyhistory/'+coin.toUpperCase())
+                .then(res=>res.json())
+                .then(data=>fill(rows1,data?.Data?.Data));
+            }
+            else if(y==2) {
+                fetch('/dailyhistory/'+coin.toUpperCase())
+                .then(res=>res.json())
+                .then(data=>fill1(rows2,data?.Data?.Data,7));
+            }
+            else if(y==3) {
+                fetch('/dailyhistory/'+coin.toUpperCase())
+                .then(res=>res.json())
+                .then(data=>fill1(rows3,data?.Data?.Data,30));
+            }
+            else {
+                fetch('/dailyhistory/'+coin.toUpperCase())
+                .then(res=>res.json())
+                .then(data=>fill1(rows4,data?.Data?.Data,365));
+            }
+        }
+        function prob(data) {
+            document.getElementsByClassName("pro")[0].innerHTML=(parseFloat(data*100)).toFixed(2)+"%"
         }
         var coin='{{coin_name}}';
-        {% comment %} console.log(coin);
-        fetch('/currentdata/'+coin.toUpperCase())
+        fetch('/percent/'+coin.toUpperCase())
         .then(res=>res.json())
-        .then(data=>fun(data)); {% endcomment %}
-        run();
-        //console.log({{crypto}})
-        {% comment %} fetch('/percent/'+coin.toUpperCase())
-        .then(res=>res.json())
-        .then(data=>fun(data)); {% endcomment %}
+        .then(data=>prob(data));
         var t=setInterval(()=>run(),60000);
+        function switchVisible(i) {
+            let bts=document.getElementsByClassName("ua");
+            let chs=document.getElementsByClassName("charts");
+            for(let j=0;j<chs.length;j++) {
+                chs[j].style.display = 'none';
+                bts[j].classList.remove("active");
+            }
+            bts[i].classList.add("active");
+            chs[i].style.display = 'block';
+            run(i);
+        }
+        run(4);
+        switchVisible(4);
+        run(3);
+        run(2);
+        run(1);
+        run(0);
     </script>
 {% endblock content %}

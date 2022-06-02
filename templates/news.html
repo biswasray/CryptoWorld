@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="container">
+	<div class="row">
+		{% for x in api.Data %}
+			<div class="col-sm">
+				<div class="card" style="width: 18rem;">
+				  <img class="card-img-top" src="{{ x.imageurl }}" alt="{{ x.source }}">
+				  <div class="card-body">
+				    <h5 class="card-title">{{ x.title }}</h5>
+				    <p class="card-text">{{ x.body|slice:"200" }}...</p>
+				    <a href="{{ x.url }}" class="btn btn-secondary">Read More...</a>
+				  </div>
+				</div>
+				<br/>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

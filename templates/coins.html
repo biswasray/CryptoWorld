@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="container">
-        <div class="row">
+{% load static %}
+    <div class="container" style="width:100%;text-align:center;">
+        {% comment %} <div class="row">
             <div class="col-sm">
                 <div class="card" style="width: 18rem;">
                     <img src="https://raw.githubusercontent.com/subhasish9583672357/cryptocurrency-icons/master/128x128/bitcoin.png"; class="card-img-top img-fluid" alt="...">
@@ -64,6 +65,20 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
+        {% for key,value in price.DISPLAY.items %}
+            <a href="/coins/{{key}}" style="text-decoration: none; display:inline-block">
+                <div >
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://www.cryptocompare.com/{{value.INR.IMAGEURL}}"; class="card-img-top img-fluid" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ key }}</h5>
+                            <p class="card-text"><strong>{{ value.INR.PRICE }}</strong></p>
+                            <p class="card-text" style="color:{{value.INR.COLOR}}"><strong>{{value.INR.CHANGEPCT24HOUR}}%</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
     </div>
 {% endblock content %}
