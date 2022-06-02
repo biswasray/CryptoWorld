@@ -13,6 +13,7 @@ from CryptoWorld.coins.bitcoin import Bitcoin
 from CryptoWorld.coins.ethereumClassic import EthereumClassic
 from CryptoWorld.coins.doge import Doge
 from CryptoWorld.coins.loopring import Loopring
+import CryptoWorld.coins.ripple as Ripple
 #url = 'https://rest.coinapi.io/v1/assets/'
 headers = {'X-CoinAPI-Key' : '3C75DCE2-F4BA-453C-8869-4D8317BE29AF'}
 client = Client("AzkHUVwGrcoUlAxH", "jlKeLnhFX4nIbKy7MrG1UDizQmEiE0c7")
@@ -50,6 +51,8 @@ def getCoinDetails(coinname) :
     result["amount"]=price["amount"]
     return (result)
 def pipelineBasic(id) :
+    if(id=='XRP') :
+        return json.dumps(getCoinDetails('BTC'))
     return json.dumps(getCoinDetails(id))
     #print(Ethereum.basicData)
     # if(id=='ETH') :
@@ -74,8 +77,10 @@ def pipelineMinute(id) :
         return json.dumps(Doge.currentData)
     elif(id=='LRC') :
         return json.dumps(Loopring.currentData)
+    elif(id=='XRP') :
+        return json.dumps(Ripple.dayBefore())
     return None
-def pipelineDays(id) :
+async def pipelineDays(id) :
     if(id=='ETH') :
         return json.dumps(Ethereum.dayData)
     elif(id=='BTC') :
@@ -86,6 +91,8 @@ def pipelineDays(id) :
         return json.dumps(Doge.dayData)
     elif(id=='LRC') :
         return json.dumps(Loopring.dayData)
+    elif(id=='XRP') :
+        return json.dumps(Ripple.dayBefore())
     return None
 # print(getCoinDetails('ETC'))
 #print(getCoin('ETC'))

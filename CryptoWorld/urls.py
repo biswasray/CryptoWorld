@@ -25,5 +25,9 @@ urlpatterns = [
     path('currentdata/<str:cid>/',views.currentdata),
     path('currentminutes/<str:cid>/',views.currentMinute),
     path('currentdays/<str:cid>/',views.currentDays),
-    path('getcoin/<str:cid>/<str:date>/',views.getCoin)
+    path('getcoin/<str:cid>/<str:date>/',views.getCoin),
+    path('dailyhistory/<str:cid>/',views.dailyHistory),
+    path('hourlyhistory/<str:cid>/',views.hourlyHistory),
+    path('minutehistory/<str:cid>/',views.minuteHistory),
+    path('percent/<str:cid>/',views.dailyPercent)
 ]

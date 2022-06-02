@@ -15,4 +15,4 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'CryptoWorld.settings')
 
 application = get_wsgi_application()
-dataloader.start()
+# dataloader.start()

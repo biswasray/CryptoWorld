@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2 class="mx-3"><img id="coinicon" src="" alt="Loading..."/>&nbsp;<label id="coinname"></label></h2>
-    <p id="pr"></p>
+    {% for key,value in crypto.DISPLAY.items %}
+        <div class="jumbotron p-4">
+            <h1><img src="https://www.cryptocompare.com/{{value.INR.IMAGEURL}}" width="64" height="64" alt="Loading..."/>&nbsp;<label class="display-4">{{ key }}</label></h1>
+            <strong>Name</strong>: {{ key }}<br/>
+            <strong>Price</strong>: {{ value.INR.PRICE }}&nbsp;<label class="percent" style="color:{{color}}"><strong>{{value.INR.CHANGEPCT24HOUR}}%</strong></label><br/>
+            <strong>Day High</strong>: {{ value.INR.HIGHDAY }}<br/>
+            <strong>Day Low</strong>: {{ value.INR.LOWDAY }}<br/>
+            <strong>Market Cap</strong>: {{ value.INR.MKTCAP }}<br/>
+        </div>  
+      <br/><br/>
+    {% endfor %}
+    {% comment %} <h2 class="mx-3"><img id="coinicon" src="" alt="Loading..."/>&nbsp;<label id="coinname"></label></h2>
+    <p id="pr"></p> {% endcomment %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <div id="chart_div"></div>
-    <div id="details" class="col mx-5">
+    {% comment %} <div id="details" class="col mx-5">
         <h3>Coin Information</h3>
         <p id="amount">Price :</p><hr/>
         <p id="mah">Maximum in 1 Hour :</p><hr/>
@@ -15,7 +26,7 @@
         <p id="v1h">Volume 1 Hour :</p><hr/>
         <p id="v1d">Volume 1 Day :</p><hr/>
         <p id="v1m">Volume 1 Month :</p><hr/>        
-    </div>
+    </div> {% endcomment %}
     <script>
         google.charts.load('current', {packages: ['corechart', 'line']});
         google.charts.setOnLoadCallback(drawBasic);
@@ -24,8 +35,8 @@
         var options;
         var rows=[];
         var cNow=Date.now();
-        for(let i=0;i<60;i++) {
-            rows[i]=[new Date(cNow  - (59-i) * 1000 * 60 ),4];
+        for(let i=0;i<=60;i++) {
+            rows[i]=[new Date(cNow  - (60-i) * 1000 * 60 ),4];
         }
         function drawBasic() {
             data = new google.visualization.DataTable();
@@ -53,22 +64,22 @@
             chart.setSelection([{row: 2, column: 1}]);
         }
         function fun(data) {
-            ir=document.getElementById("coinicon");
-            let nm=data.name.toLowerCase().replace(" ","-");
-            ir.src="https://raw.githubusercontent.com/subhasish9583672357/cryptocurrency-icons/master/32x32/"+nm+".png";
-            hr=document.getElementById("coinname");
-            hr.innerHTML=data.name;
-            console.log(data);
-            document.getElementById("amount").innerHTML+=(parseFloat(data.amount)).toFixed(2);
-            document.getElementById("v1h").innerHTML+=data.volume_1hrs_usd;
-            document.getElementById("v1d").innerHTML+=data.volume_1day_usd;
-            document.getElementById("v1m").innerHTML+=data.volume_1mth_usd;
+            let pe=data[data.length-1];
+            let el=document.getElementsByClassName("percent")[0];
+            if(pe<0)
+                el.style.color = "red";
+            else 
+                el.style.color = "green";
+            el.innerHTML=(parseFloat(pe)).toFixed(2)+"%";
         }
         function fill(data) {
             console.log(data);
-            cNow=Date.now();
-            for(let i=0;i<60;i++) {
-                rows[i]=[new Date(cNow  - (59-i) * 1000 * 60 ),data[i]];
+            //cNow=Date.now();
+            //let ti=data.length-5;
+            for(let i=0;i<data.length;i++) {
+                let dt=new Date(data[i]?.time*1000);
+                //console.log(data[i]?.);
+                rows[i]=[dt,data[i]?.open];
             }
             //drawBasic();
             //data.addRows(rows);
@@ -76,16 +87,22 @@
             google.charts.setOnLoadCallback(drawBasic);
         }
         function run() {
-            fetch('/currentminutes/'+coin.toUpperCase())
+            var coin='{{coin_name}}';
+            fetch('/minutehistory/'+coin.toUpperCase())
             .then(res=>res.json())
-            .then(data=>fill(data));
+            //.then(data=>console.log(data));
+            .then(data=>fill(data?.Data?.Data));
         }
         var coin='{{coin_name}}';
-        console.log(coin);
+        {% comment %} console.log(coin);
         fetch('/currentdata/'+coin.toUpperCase())
         .then(res=>res.json())
-        .then(data=>fun(data));
+        .then(data=>fun(data)); {% endcomment %}
         run();
+        //console.log({{crypto}})
+        {% comment %} fetch('/percent/'+coin.toUpperCase())
+        .then(res=>res.json())
+        .then(data=>fun(data)); {% endcomment %}
         var t=setInterval(()=>run(),60000);
     </script>
 {% endblock content %}
